@@ -1,0 +1,24 @@
+{
+  "name": "e-commerce-back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheSign02/e-commerce-back-end.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/TheSign02/e-commerce-back-end/issues"
+  },
+  "homepage": "https://github.com/TheSign02/e-commerce-back-end#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
