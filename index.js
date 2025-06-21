@@ -26,13 +26,36 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/test", async (req, res) => {
+app.get("/products", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM test_table");
+    const result = await pool.query("SELECT * FROM products");
     res.json(result.rows);
 
   } catch (error) {
     res.status(500).json({ error: error.message });
+    console.log({ error: error.message })
+  }
+});
+
+app.get("/orders", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM orders");
+    res.json(result.rows);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log({ error: error.message })
+  }
+});
+
+app.get("/users", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM users");
+    res.json(result.rows);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log({ error: error.message })
   }
 });
 
