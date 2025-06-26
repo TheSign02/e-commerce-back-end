@@ -1,5 +1,6 @@
 import express from "express";
-import userRoute from "./routes/User.js";
+import UserRoute from "./routes/UserRoute.js";
+import OrderRoute from "./routes/OrderRoute.js"
 const app = express();
 const port = 3000;
 
@@ -7,7 +8,9 @@ const port = 3000;
 app.use(express.json());
 
 // Routes
-app.use("/user", userRoute);
+app.use("/user", UserRoute);
+
+app.use("/order", OrderRoute);
 
 app.listen((port), () => {
   console.log(`Server running at http://localhost:${port}`);
