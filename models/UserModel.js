@@ -49,7 +49,7 @@ async function updateUserById(userId, name, email, password) {
   return result.rows[0];
 }
 
-export default {
+export {
   createUser,
   getUserByEmail,
   getUserById,

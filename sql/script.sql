@@ -2,7 +2,7 @@ CREATE SCHEMA app;
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    username VARCHAR(64) UNIQUE NOT NULL,
+    name VARCHAR(64) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash CHAR(60) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -27,10 +27,24 @@ CREATE TABLE app.orders (
 );
 
 CREATE TABLE app.orders_products (
-    order_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES app.orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES app.products(product_id)
+    order_id INTEGER REFERENCES orders(order_id),
+    product_id INTEGER REFERENCES products(product_id),
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, product_id)
+);
+
+CREATE TABLE app.carts (
+    cart_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE app.carts_products (
+    cart_id INTEGER REFERENCES carts(cart_id),
+    product_id INTEGER REFERENCES products(product_id),
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (cart_id, product_id)
 );
 
 -- set search_path in order not to always query app.users, just users
@@ -59,4 +73,17 @@ SELECT * FROM products;
 
 -- insert into orders
 INSERT INTO app.orders (user_id)
-VALUES ();
+VALUES (3);
+
+SELECT * FROM orders;
+SELECT * FROM users;
+
+-- insert into orders_products
+INSERT INTO orders_products (order_id, product_id, quantity)
+VALUES (1, 3, 50);
+SELECT * FROM orders_products;
+
+SELECT SUM(quantity * price) AS total_price
+FROM orders_products
+JOIN products
+ON orders_products.product_id = products.product_id;

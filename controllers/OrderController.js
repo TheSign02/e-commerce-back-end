@@ -1,4 +1,4 @@
-import { getOrderById } from "../models/OrderModel";
+import { getOrderById } from "../models/OrderModel.js";
 
 export default {
     // Get Order by Id
