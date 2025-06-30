@@ -3,7 +3,8 @@ import {
   deleteProductById,
   getProductById,
   updateProductById,
-  getProductsByCategory,
+  getProductsByCategoryFuzzy,
+  getProductsByCategoryId,
 } from "../models/ProductModel.js";
 
 export default {
@@ -25,8 +26,14 @@ export default {
   // Get Products by Category
   getProductsByCategory: async (req, res) => {
     try {
-      const productCategory = req.query.category;
-      const result = await(getProductsByCategory(productCategory));
+      const{ category, category_id } = req.query;
+      let result;
+      if(category){
+        result = await(getProductsByCategoryFuzzy(category));
+      }
+      else if(category_id){
+        result = await(getProductsByCategoryId(category_id));
+      }
       res.status(200).json(result);
 
     } catch (error) {
@@ -36,10 +43,10 @@ export default {
   // Post product
   postProduct: async (req, res) => {
     try {
-      const { name, category, price, description, stock } = req.body;
+      const { name, category_id, price, description, stock } = req.body;
       const result = await postProduct(
         name,
-        category,
+        category_id,
         price,
         description,
         stock
@@ -52,7 +59,7 @@ export default {
           product: {
             product_id: result.product_id,
             name: result.name,
-            category: result.category,
+            category_id: result.category_id,
             price: result.price,
             description: result.description,
             stock: result.stock,
@@ -80,11 +87,11 @@ export default {
   updateProductById: async (req, res) => {
     try {
       const productId = req.params.id;
-      const { name, category, price, description, stock } = req.body;
+      const { name, category_id, price, description, stock } = req.body;
       const result = await updateProductById(
         productId,
         name,
-        category,
+        category_id,
         price,
         description,
         stock

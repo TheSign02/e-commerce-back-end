@@ -12,7 +12,7 @@ CREATE TABLE users (
 CREATE TABLE app.products (
     product_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    category VARCHAR(50) NOT NULL,
+    category_id INT REFERENCES app.categories(category_id),
     price DECIMAL NOT NULL,
     description TEXT DEFAULT 'No description',
     stock INTEGER NOT NULL,
@@ -47,6 +47,12 @@ CREATE TABLE app.orders_products (
     quantity INTEGER NOT NULL,
     PRIMARY KEY (order_id, product_id)
 );
+
+CREATE TABLE app.categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
 
 -- set search_path in order not to always query app.users, just users
 ALTER DATABASE postgres SET search_path TO app, public;
