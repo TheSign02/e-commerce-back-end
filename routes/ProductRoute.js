@@ -2,12 +2,12 @@ import express from "express";
 import controller from "../controllers/ProductController.js";
 const router = express.Router();
 
-
 // CREATE - POST
 router.post("/", controller.postProduct);
 
 // READ - GET
 router.get("/:id", controller.getProductById);
+router.get("/", controller.getProductsByCategory);
 
 // UPDATE - PUT
 router.put("/:id", controller.updateProductById);

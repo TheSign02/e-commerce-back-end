@@ -3,6 +3,7 @@ import {
   deleteProductById,
   getProductById,
   updateProductById,
+  getProductsByCategory,
 } from "../models/ProductModel.js";
 
 export default {
@@ -17,6 +18,17 @@ export default {
       }
 
       res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+  // Get Products by Category
+  getProductsByCategory: async (req, res) => {
+    try {
+      const productCategory = req.query.category;
+      const result = await(getProductsByCategory(productCategory));
+      res.status(200).json(result);
+
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -68,8 +80,7 @@ export default {
   updateProductById: async (req, res) => {
     try {
       const productId = req.params.id;
-      const { name, category, price, description, stock } =
-        req.body;
+      const { name, category, price, description, stock } = req.body;
       const result = await updateProductById(
         productId,
         name,

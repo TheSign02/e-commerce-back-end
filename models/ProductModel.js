@@ -9,6 +9,15 @@ async function getProductById(id) {
   return result.rows[0];
 }
 
+// Find Products by category, using fuzzy search, treshhold can be updated for stricter/looser matching
+async function getProductsByCategory(category) {
+  const result = await pool.query(
+    "SELECT * FROM products WHERE similarity(category, $1) > 0.2 ORDER BY similarity(category, $1) DESC",
+    [category]
+  );
+  return result.rows;
+}
+
 // Post product
 async function postProduct(name, category, price, description, stock) {
   const result = await pool.query(
@@ -28,12 +37,25 @@ async function deleteProductById(id) {
 }
 
 // Update product
-async function updateProductById(product_id, name, category, price, description, stock) {
+async function updateProductById(
+  product_id,
+  name,
+  category,
+  price,
+  description,
+  stock
+) {
   const result = await pool.query(
     "UPDATE products SET name = $2, category = $3, price = $4, description = $5, stock = $6 WHERE product_id = $1 RETURNING *",
     [product_id, name, category, price, description, stock]
-  )
+  );
   return result.rows[0];
 }
 
-export { getProductById, postProduct, deleteProductById, updateProductById };
+export {
+  getProductById,
+  getProductsByCategory,
+  postProduct,
+  deleteProductById,
+  updateProductById,
+};

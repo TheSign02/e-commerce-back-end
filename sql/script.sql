@@ -86,6 +86,15 @@ FROM orders_products
 JOIN products
 ON orders_products.product_id = products.product_id;
 
+-- extention for fuzzy search
+CREATE EXTENSION IF NOT EXISTS pg_trgm; --trigram-based searching—allowing
+
+-- create index for fuzzy search
+CREATE INDEX IF NOT EXISTS idx_products_category_trgm
+ON products
+USING gin (category gin_trgm_ops);
+
+
 -- SELECTs
 SELECT * FROM users;
 SELECT * FROM products;
