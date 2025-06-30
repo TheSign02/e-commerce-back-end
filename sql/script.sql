@@ -22,9 +22,7 @@ CREATE TABLE app.products (
 
 CREATE TABLE app.carts (
     cart_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(user_id),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id INTEGER REFERENCES users(user_id) UNIQUE NOT NULL
 );
 
 CREATE TABLE app.carts_products (
@@ -68,7 +66,7 @@ $$ LANGUAGE plpgsql;
 
 -- create trigger from function above
 CREATE TRIGGER update_products_modified_at
-BEFORE UPDATE ON app.carts -- for users, products, and carts
+BEFORE UPDATE ON app.carts -- for users and products
 FOR EACH ROW
 EXECUTE FUNCTION update_modified_at();
 
@@ -108,3 +106,6 @@ SELECT * FROM carts;
 SELECT * FROM carts_products;
 SELECT * FROM orders;
 SELECT * FROM orders_products;
+
+INSERT INTO carts_products (cart_id, product_id, quantity)
+VALUES (1, 1, 3);
