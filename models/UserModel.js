@@ -24,7 +24,7 @@ async function getUserByEmail(email) {
 async function createUser(name, email, password) {
   const passwordHash = await bcrypt.hash(password, saltRounds);
   const result = await pool.query(
-    "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING name, email",
+    "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING name, email, user_id",
     [name, email, passwordHash]
   );
   return result.rows[0];

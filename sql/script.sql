@@ -12,25 +12,12 @@ CREATE TABLE users (
 CREATE TABLE app.products (
     product_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
+    category VARCHAR(50) NOT NULL,
     price DECIMAL NOT NULL,
-    description TEXT DEFAULT "No description",
+    description TEXT DEFAULT 'No description',
     stock INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE app.orders (
-    order_id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
-    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES app.users(user_id)
-);
-
-CREATE TABLE app.orders_products (
-    order_id INTEGER REFERENCES orders(order_id),
-    product_id INTEGER REFERENCES products(product_id),
-    quantity INTEGER NOT NULL,
-    PRIMARY KEY (order_id, product_id)
 );
 
 CREATE TABLE app.carts (
@@ -41,10 +28,24 @@ CREATE TABLE app.carts (
 );
 
 CREATE TABLE app.carts_products (
-    cart_id INTEGER REFERENCES carts(cart_id),
-    product_id INTEGER REFERENCES products(product_id),
+    cart_id INTEGER REFERENCES carts(cart_id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
     quantity INTEGER NOT NULL,
     PRIMARY KEY (cart_id, product_id)
+);
+
+CREATE TABLE app.orders (
+    order_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES app.users(user_id)
+);
+
+CREATE TABLE app.orders_products (
+    order_id INTEGER REFERENCES orders(order_id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, product_id)
 );
 
 -- set search_path in order not to always query app.users, just users
@@ -61,7 +62,7 @@ $$ LANGUAGE plpgsql;
 
 -- create trigger from function above
 CREATE TRIGGER update_products_modified_at
-BEFORE UPDATE ON app.users
+BEFORE UPDATE ON app.carts -- for users, products, and carts
 FOR EACH ROW
 EXECUTE FUNCTION update_modified_at();
 
@@ -75,9 +76,6 @@ SELECT * FROM products;
 INSERT INTO app.orders (user_id)
 VALUES (3);
 
-SELECT * FROM orders;
-SELECT * FROM users;
-
 -- insert into orders_products
 INSERT INTO orders_products (order_id, product_id, quantity)
 VALUES (1, 3, 50);
@@ -87,3 +85,11 @@ SELECT SUM(quantity * price) AS total_price
 FROM orders_products
 JOIN products
 ON orders_products.product_id = products.product_id;
+
+-- SELECTs
+SELECT * FROM users;
+SELECT * FROM products;
+SELECT * FROM carts;
+SELECT * FROM carts_products;
+SELECT * FROM orders;
+SELECT * FROM orders_products;
