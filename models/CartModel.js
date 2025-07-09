@@ -13,7 +13,7 @@ async function postCartByUserId(user_id) {
 // Get cart based on userId
 async function getCartByUserId(user_id) {
   const result = await pool.query(
-    "SELECT p.product_id, p.name, p.price, p.description, p.stock, cp.quantity FROM carts c JOIN carts_products cp ON c.cart_id = cp.cart_id JOIN products p ON cp.product_id = p.product_id WHERE c.user_id = $1",
+    "SELECT c.cart_id, p.product_id, p.name, p.price, p.description, p.stock, cp.quantity FROM carts c JOIN carts_products cp ON c.cart_id = cp.cart_id JOIN products p ON cp.product_id = p.product_id WHERE c.user_id = $1",
     [user_id]
   );
   return result.rows;
